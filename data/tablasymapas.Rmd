@@ -1,0 +1,256 @@
+Librerias🠻
+```{r}
+
+#install.packages("ggraph")
+#install.packages("circlize")
+#install.packages("reshape2")
+#devtools::install_github("mattflor/chorddiag")
+#install.packages("treemap")
+library(htmlwidgets)
+library(chorddiag)
+library(reshape2)
+library(circlize)
+library(readxl)
+library(tidyverse)
+library(ggraph)
+library(igraph)
+library(tidyverse)
+library(RColorBrewer)
+library(tools)
+library(stringr)
+library(rjson)
+library(treemap)
+library(highcharter)
+
+
+#setwd("C:/EANT/Trabajo final")
+#getwd()
+
+```
+
+Función🠻
+```{r}
+get.Comtrade <- function(url="http://comtrade.un.org/api/get?"
+                         ,maxrec=50000
+                         ,type="C"
+                         ,freq="A"
+                         ,px="HS"
+                         ,ps="now"
+                         ,r
+                         ,p
+                         ,rg="all"
+                         ,cc="TOTAL"
+                         ,fmt="json"
+)
+{
+  string<- paste(url
+                 ,"max=",maxrec,"&" #maximum no. of records returned
+                 ,"type=",type,"&" #type of trade (c=commodities)
+                 ,"freq=",freq,"&" #frequency
+                 ,"px=",px,"&" #classification
+                 ,"ps=",ps,"&" #time period
+                 ,"r=",r,"&" #reporting area
+                 ,"p=",p,"&" #partner country
+                 ,"rg=",rg,"&" #trade flow
+                 ,"cc=",cc,"&" #classification code
+                 ,"fmt=",fmt        #Format
+                 ,sep = ""
+  )
+  string
+  if(fmt == "csv") {
+    raw.data<- read.csv(string,header=TRUE)
+    return(list(validation=NULL, data=raw.data))
+  } else {
+    if(fmt == "json" ) {
+      raw.data<- fromJSON(file=string)
+      data<- raw.data$dataset
+      validation<- unlist(raw.data$validation, recursive=TRUE)
+      ndata<- NULL
+      if(length(data)> 0) {
+        var.names<- names(data[[1]])
+        data<- as.data.frame(t( sapply(data,rbind)))
+        ndata<- NULL
+        for(i in 1:ncol(data)){
+          data[sapply(data[,i],is.null),i]<- NA
+          ndata<- cbind(ndata, unlist(data[,i]))
+        }
+        ndata<- as.data.frame(ndata)
+        colnames(ndata)<- var.names
+      }
+      return(list(validation=validation,data =ndata))
+    
+    }
+  }
+}
+
+```
+
+Nombre de Países 🠻
+```{r}
+#nombre de paises
+string <- "http://comtrade.un.org/data/cache/partnerAreas.json"
+reporters <- fromJSON(file=string)
+reporters <- as.data.frame(t(sapply(reporters$results,rbind)))
+```
+
+Gráfico de circulo🠻
+```{r}
+#grafico de circulo
+#selección de variables
+Bajada <-get.Comtrade(r="842,124,484", p="842,124,484", fmt = "csv", rg = "2")
+Bajada <- Bajada[["data"]]
+names(Bajada)
+#Tabla_doble_entrada
+Tabla <- acast(Bajada, Reporter.ISO ~ Partner.ISO,sum, value.var = "Trade.Value..US..")
+#Grafico
+f <- chorddiag(Tabla)
+f
+```
+
+Importaciones por país 🠻
+```{r}
+#Importaciones de Argentina x pais
+importaciones <-get.Comtrade(r="32", p="all", fmt = "csv", rg = "1")
+importaciones <- importaciones[["data"]]
+
+principalesImportaciones <- importaciones %>% 
+  select("Year", "Reporter", "Partner", "Trade.Value..US..", "Partner.ISO" ) %>% 
+  arrange(desc(Trade.Value..US..)) %>% 
+  rename("Año" = "Year", "Reporte" = "Reporter", "Socio comercial" = "Partner", "Valor comercial en USS" = "Trade.Value..US..", "iso-a3" = "Partner.ISO")
+
+#Obtenemos el valor de las importacines mundiales
+importacionesTotal <- principalesImportaciones[1,]
+
+#Excluimos la primer fila correspondiente a los valores mundiales para obtener el ranking de paises         
+principalesImportaciones = principalesImportaciones[-1,]
+
+
+# 10 primeros paises en el ranking de exportaciones (se excluye a "World" en la primera fila)
+diezprincipalesImportaciones <- head(principalesImportaciones, n=10L)
+
+row.names(principalesImportaciones) <- NULL
+
+principalesImportaciones  
+```
+
+Exportaciones por país 🠻
+```{r}
+#Exportaciones de Argentina x pais
+exportaciones <-get.Comtrade(r="32", p="all", fmt = "csv", rg = "2")
+exportaciones <- exportaciones[["data"]]
+
+principalesExportaciones <- exportaciones %>% 
+  select("Year", "Reporter", "Partner", "Trade.Value..US..","Partner.ISO") %>% 
+  arrange(desc(Trade.Value..US..)) %>% 
+  rename("Año" = "Year", "Reporte" = "Reporter", "Socio comercial" = "Partner", "Valor comercial en USS" = "Trade.Value..US..","iso-a3" = "Partner.ISO")
+
+#Obtenemos el valor de las exportaciones mundiales
+
+exportacionesTotal <- principalesExportaciones[1,]
+
+principalesExportaciones = principalesExportaciones[-1,]
+
+
+# 10 primeros paises en el ranking de exportaciones (se excluye a "World" en la primera fila)
+diezprincipalesExportaciones <- head(principalesExportaciones, n=10L)
+
+row.names(principalesExportaciones) <- NULL
+
+principalesExportaciones  
+```
+
+Mapa🠻
+```{r}
+#seleccionar la consulta (no funciona todavia)
+seleccion<- "Importaciones"
+datoselegidos <- paste("principales",seleccion,sep = "")
+glimpse(datoselegidos)
+
+#Mapa
+hcmap(
+  "custom/world-robinson-lowres", 
+  data = principalesExportaciones,
+  name = "Exportaciones", 
+  value = "Valor comercial en USS",
+  borderWidth = 0,
+  nullColor = "#d3d3d3",
+  joinBy = "iso-a3"
+  ) %>%
+  hc_colorAxis(
+    stops = color_stops(colors = viridisLite::cividis (10, begin = 0.1)),
+    type = "logarithmic"
+    ) 
+```
+
+
+```{r}
+# Mapa importaciones
+
+#Mapa
+hcmap(
+  "custom/world-robinson-lowres", 
+  data = principalesImportaciones,
+  name = "Importaciones", 
+  value = "Valor comercial en USS",
+  borderWidth = 0,
+  nullColor = "#d3d3d3",
+  joinBy = "iso-a3"
+  ) %>%
+  hc_colorAxis(
+    stops = color_stops(colors = viridisLite::cividis (10, begin = 0.1)),
+    type = "logarithmic"
+    ) 
+
+
+```
+
+Importaciones por producto 🠻
+```{r}
+#Importaciones de Argentina x producto
+
+importacionesproduc <-get.Comtrade(r="32", p="0", cc ="All", fmt = "csv", rg = "1", px = "BEC")
+importacionesproduc <- importacionesproduc[["data"]]
+
+
+principalesImportacionesproduc <- importacionesproduc %>% 
+  select("Year", "Commodity.Code", "Aggregate.Level", "Trade.Value..US..", "Commodity")%>% 
+  filter(Aggregate.Level == "1")%>% 
+  arrange(desc(Aggregate.Level = "l"))%>% 
+  rename("Año" = "Year", "Codigo Producto" = "Commodity.Code", "Nivel de Agregacion" = "Aggregate.Level", "Valor comercial en USS" = "Trade.Value..US..")
+
+glimpse (principalesImportacionesproduc)
+
+
+```
+
+Treemap🠻
+```{r}
+
+
+hchart(principalesImportacionesproduc, "treemap", hcaes(x = Commodity, value = `Valor comercial en USS`))
+```
+
+
+```{r}
+#Exportaciones de Argentina x producto
+
+exportacionesproduc <-get.Comtrade(r="32", p="0", cc ="All", fmt = "csv", rg = "2", px = "BEC")
+exportacionesproduc <- exportacionesproduc[["data"]]
+
+
+principalesExportacionesproduc <- exportacionesproduc %>% 
+  select("Year", "Commodity.Code", "Aggregate.Level", "Trade.Value..US..", "Commodity")%>% 
+  filter(Aggregate.Level == "1")%>% 
+  arrange(desc(Aggregate.Level = "l"))%>% 
+  rename("Año" = "Year", "Codigo Producto" = "Commodity.Code", "Nivel de Agregacion" = "Aggregate.Level", "Valor comercial en USS" = "Trade.Value..US..")
+
+glimpse (principalesExportacionesproduc)
+```
+
+
+```{r}
+#Exportaciones por producto
+
+hchart(principalesExportacionesproduc, "treemap", hcaes(x = Commodity, value = `Valor comercial en USS`))
+```
+

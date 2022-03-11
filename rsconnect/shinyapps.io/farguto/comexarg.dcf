@@ -1,0 +1,12 @@
+name: comexarg
+title: comexarg
+username:
+account: farguto
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3118034
+bundleId: 3796847
+url: https://farguto.shinyapps.io/comexarg/
+when: 1603981330.18465
+asMultiple: FALSE
+asStatic: FALSE

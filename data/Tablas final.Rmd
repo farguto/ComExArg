@@ -1,0 +1,163 @@
+Librerias🠻
+```{r}
+
+#install.packages("ggraph")
+#install.packages("circlize")
+#install.packages("reshape2")
+#devtools::install_github("mattflor/chorddiag")
+#install.packages("treemap")
+library(htmlwidgets)
+library(chorddiag)
+library(reshape2)
+library(circlize)
+library(readxl)
+library(tidyverse)
+library(ggraph)
+library(igraph)
+library(tidyverse)
+library(RColorBrewer)
+library(tools)
+library(stringr)
+library(rjson)
+library(treemap)
+library(highcharter)
+
+
+#setwd("C:/EANT/Trabajo final")
+#getwd()
+
+```
+
+Función🠻
+```{r}
+get.Comtrade <- function(url="http://comtrade.un.org/api/get?"
+                         ,maxrec=50000
+                         ,type="C"
+                         ,freq="A"
+                         ,px="HS"
+                         ,ps="now"
+                         ,r
+                         ,p
+                         ,rg="all"
+                         ,cc="TOTAL"
+                         ,fmt="json"
+)
+{
+  string<- paste(url
+                 ,"max=",maxrec,"&" #maximum no. of records returned
+                 ,"type=",type,"&" #type of trade (c=commodities)
+                 ,"freq=",freq,"&" #frequency
+                 ,"px=",px,"&" #classification
+                 ,"ps=",ps,"&" #time period
+                 ,"r=",r,"&" #reporting area
+                 ,"p=",p,"&" #partner country
+                 ,"rg=",rg,"&" #trade flow
+                 ,"cc=",cc,"&" #classification code
+                 ,"fmt=",fmt        #Format
+                 ,sep = ""
+  )
+  string
+  if(fmt == "csv") {
+    raw.data<- read.csv(string,header=TRUE)
+    return(list(validation=NULL, data=raw.data))
+  } else {
+    if(fmt == "json" ) {
+      raw.data<- fromJSON(file=string)
+      data<- raw.data$dataset
+      validation<- unlist(raw.data$validation, recursive=TRUE)
+      ndata<- NULL
+      if(length(data)> 0) {
+        var.names<- names(data[[1]])
+        data<- as.data.frame(t( sapply(data,rbind)))
+        ndata<- NULL
+        for(i in 1:ncol(data)){
+          data[sapply(data[,i],is.null),i]<- NA
+          ndata<- cbind(ndata, unlist(data[,i]))
+        }
+        ndata<- as.data.frame(ndata)
+        colnames(ndata)<- var.names
+      }
+      return(list(validation=validation,data =ndata))
+    
+    }
+  }
+}
+
+```
+
+Nomeclador castellano
+```{r}
+Nomenclador <- read_excel("Nomenclador.xls")
+Nomenclador$Códi = as.character(Nomenclador$Códi)
+Nomenclador <- select(Nomenclador, "Códi" , "Descripción")
+```
+
+Importaciones por producto 🠻
+```{r}
+#Importaciones de Argentina x producto
+
+importacionesproduc <-get.Comtrade(r="32", p="0", cc ="All", fmt = "csv", rg = "1", px = "HS")
+importacionesproduc <- importacionesproduc[["data"]]
+glimpse( importacionesproduc)
+
+
+principalesImportacionesproduc <- importacionesproduc %>% 
+    select("Year", "Commodity.Code", "Aggregate.Level", "Trade.Value..US..", "Commodity")%>% 
+  filter(Aggregate.Level == 2 )%>% 
+  arrange(desc(Trade.Value..US..))%>% 
+  rename("Año" = "Year", "Códi" = "Commodity.Code", "Nivel de Agregacion" = "Aggregate.Level", "Valor comercial en USS" = "Trade.Value..US..")
+
+#joint con nomeclador
+
+
+
+principalesImportacionesproduc <-left_join(principalesImportacionesproduc,Nomenclador, by = "Códi")
+
+#armado tabla definitiva
+
+principalesImportacionesproduc <- principalesImportacionesproduc %>% select("Códi","Valor comercial en USS","Descripción" )
+principalesImportacionesproduc <- head(principalesImportacionesproduc, n=10L)
+
+
+```
+
+Treemap impo🠻
+```{r}
+
+
+hchart(principalesImportacionesproduc, "treemap", hcaes(x = Descripción, value = `Valor comercial en USS`, color = `Valor comercial en USS`)) %>% 
+  hc_chart( style = list(fontFamily = "Helvetica")) %>% 
+  hc_colorAxis(stops = color_stops(colors = viridis::inferno(10)))
+```
+
+Exportaciones por producto
+```{r}
+#Exportaciones de Argentina x producto
+
+exportacionesproduc <-get.Comtrade(r="32", p="0", cc ="All", fmt = "csv", rg = "2", px = "HS")
+exportacionesproduc <- exportacionesproduc[["data"]]
+
+principalesExportacionesproduc <- exportacionesproduc %>% 
+  select("Year", "Commodity.Code", "Aggregate.Level", "Trade.Value..US..", "Commodity")%>% 
+  filter(Aggregate.Level == "2")%>% 
+  arrange(desc(Trade.Value..US..))%>%  
+  rename("Año" = "Year", "Códi" = "Commodity.Code", "Nivel de Agregacion" = "Aggregate.Level", "Valor comercial en USS" = "Trade.Value..US..")
+
+#joint con nomeclador
+
+principalesExportacionesproduc <-left_join(principalesExportacionesproduc,Nomenclador, by = "Códi")
+
+#armado tabla definitiva
+
+principalesExportacionesproduc <- principalesExportacionesproduc %>% select("Códi","Valor comercial en USS","Descripción" )
+principalesExportacionesproduc <- head(principalesExportacionesproduc, n=10L)
+
+```
+
+Treemap expo
+```{r}
+hchart(principalesExportacionesproduc, "treemap", hcaes(x = Descripción, value = `Valor comercial en USS`, color = `Valor comercial en USS`)) %>% 
+  hc_chart( style = list(fontFamily = "Helvetica")) %>% 
+  hc_colorAxis(stops = color_stops(colors = viridis::inferno(10)))
+```
+

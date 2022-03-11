@@ -1,0 +1,207 @@
+codigo;id;nombre
+0;all;Todos
+4;afg;Afganistán
+8;alb;Albania
+276;deu;Alemania
+20;and;Andorra
+24;ago;Angola
+682;sau;Arabia Saudita
+12;dza;Argelia
+32;arg;Argentina
+51;arm;Armenia
+533;abw;Aruba
+36;aus;Australia
+40;aut;Austria
+31;aze;Azerbaiyán
+44;bhs;Bahamas
+48;bhr;Bahrein
+50;bgd;Bangladesh
+52;brb;Barbados
+112;blr;Belarús
+56;bel;Bélgica
+84;blz;Belice
+204;ben;Benin
+64;btn;Bhután
+68;bol;Bolivia
+70;bih;Bosnia y Herzegovina
+72;bwa;Botswana
+76;bra;Brasil
+96;brn;Brunei
+100;bgr;Bulgaria
+854;bfa;Burkina Faso
+108;bdi;Burundi
+132;cpv;Cabo Verde
+116;khm;Camboya
+120;cmr;Camerún
+124;can;Canadá
+148;tcd;Chad
+152;chl;Chile
+156;chn;China
+196;cyp;Chipre
+170;col;Colombia
+174;com;Comoras
+178;cog;Congo
+410;kor;Corea
+408;prk;Corea Democrática y Popular
+188;cri;Costa Rica
+384;civ;Côte d'Ivoire
+191;hrv;Croacia
+192;cub;Cuba
+208;dnk;Dinamarca
+304;grl;Dinamarca
+262;dji;Djibouti
+212;dma;Dominica
+218;ecu;Ecuador
+818;egy;Egipto
+222;slv;El Salvador
+784;are;Emiratos Árabes Unidos
+232;eri;Eritrea
+703;svk;Eslovaquia
+705;svn;Eslovenia
+724;esp;España
+842;usa;Estados Unidos
+233;est;Estonia
+231;eth;Etiopía
+242;fji;Fiji
+608;phl;Filipinas
+246;fin;Finlandia
+251;fra;Francia
+266;gab;Gabón
+270;gmb;Gambia
+268;geo;Georgia
+288;gha;Ghana
+292;gib;Gibraltar
+308;grd;Granada
+300;grc;Grecia
+320;gtm;Guatemala
+324;gin;Guinea
+624;gnb;Guinea Bissau
+226;gnq;Guinea Ecuatorial
+328;guy;Guyana
+254;guf;Guyana Francesa
+332;hti;Haití
+340;hnd;Honduras
+344;hkg;Hong Kong
+348;hun;Hungría
+699;ind;India
+356;ind;India
+360;idn;Indonesia
+364;irn;Irán
+368;irq;Iraq
+372;irl;Irlanda
+352;isl;Islandia
+580;mnp;Islas Marianas
+584;mhl;Islas Marshall
+90;slb;Islas Salomón
+850;vir;Islas Vírgenes
+376;isr;Israel
+381;ita;Italia
+388;jam;Jamaica
+392;jpn;Japón
+400;jor;Jordania
+398;kaz;Kazajstán
+404;ken;Kenya
+417;kgz;Kirguistán
+296;kir;Kiribati
+414;kwt;Kuwait
+418;lao;Laos
+426;lso;Lesotho
+428;lva;Letonia
+422;lbn;Líbano
+430;lbr;Liberia
+434;lby;Libia
+440;ltu;Lituania
+442;lux;Luxemburgo
+446;mac;Macao
+807;mkd;Macedonia
+450;mdg;Madagascar
+458;mys;Malasia
+454;mwi;Malawi
+462;mdv;Maldivas
+466;mli;Malí
+470;mlt;Malta
+504;mar;Marruecos
+480;mus;Mauricio
+478;mrt;Mauritania
+484;mex;México
+583;fsm;Micronesia
+498;mda;Moldova
+496;mng;Mongolia
+499;mne;Montenegro
+508;moz;Mozambique
+104;mmr;Myanmar
+516;nam;Namibia
+520;nru;Nauru
+524;npl;Nepal
+558;nic;Nicaragua
+562;ner;Níger
+566;nga;Nigeria
+579;nor;Noruega
+554;nzl;Nueva Zelandia
+512;omn;Omán
+528;nld;Países Bajos
+588;pak;Pakistán
+585;plw;Palau
+275;pse;Palestina
+591;pan;Panamá
+598;png;Papua Nueva Guinea
+600;pry;Paraguay
+604;per;Perú
+258;pyf;Polinesia Francesa
+616;pol;Polonia
+620;prt;Portugal
+634;qat;Qatar
+826;gbr;Reino Unido
+140;caf;República Centroafricana
+203;cze;República Checa
+180;cod;República Democrática del Congo
+214;dom;República Dominicana
+642;rou;Rumania
+643;rus;Rusia
+646;rwa;Rwanda
+882;wsm;Samoa
+659;kna;San Cristóbal y Nevis
+674;smr;San Marino
+670;vct;San Vicente y Las Granadinas
+662;lca;Santa Lucía
+678;stp;Santo Tomé y Príncipe
+686;sen;Senegal
+688;srb;Serbia
+690;syc;Seychelles
+694;sle;Sierra Leona
+702;sgp;Singapur
+760;syr;Siria
+706;som;Somalia
+144;lka;Sri Lanka
+711;zaf;Sudáfrica
+710;zaf;Sudáfrica
+736;sdn;Sudán
+729;sdn;Sudán
+728;ssd;Sudán del Sur
+752;swe;Suecia
+757;che;Suiza
+740;sur;Suriname
+748;swz;Swazilandia
+764;tha;Tailandia
+834;tza;Tanzanía
+762;tjk;Tayikistán
+626;tls;Timor Leste
+768;tgo;Togo
+776;ton;Tonga
+780;tto;Trinidad y Tobago
+788;tun;Túnez
+795;tkm;Turkmenistán
+792;tur;Turquía
+798;tuv;Tuvalu
+804;ukr;Ucrania
+800;uga;Uganda
+858;ury;Uruguay
+860;uzb;Uzbekistán
+548;vut;Vanuatu
+336;vat;Vaticano
+862;ven;Venezuela
+868;vnm;Viet Nam
+704;vnm;Viet Nam
+887;yem;Yemen
+894;zmb;Zambia
+716;zwe;Zimbabwe

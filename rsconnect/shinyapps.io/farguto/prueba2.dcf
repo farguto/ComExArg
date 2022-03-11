@@ -1,0 +1,12 @@
+name: prueba2
+title: prueba2
+username:
+account: farguto
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3109927
+bundleId: 3794290
+url: https://farguto.shinyapps.io/prueba2/
+when: 1603927605.33737
+asMultiple: FALSE
+asStatic: FALSE
