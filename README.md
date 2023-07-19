@@ -1,5 +1,5 @@
 # ComExArg
-Sistema de Consulta del Comercio Exterior Argentino: https://farguto.shinyapps.io/comexarg/
+Sistema de Consulta del Comercio Exterior Argentino
 
 Desarrollado por Martínez, Pérez Ibáñez y Arguto
 
